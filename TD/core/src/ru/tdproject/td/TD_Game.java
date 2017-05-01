@@ -13,7 +13,7 @@ public class TD_Game extends ApplicationAdapter {
 	TD_Engine Eng;
 	//OrthographicCamera camera;
 	World _world;
-	Unit unit1;
+	Unit unit1,unit2;
 	
 	@Override
 	public void create () {
@@ -21,7 +21,9 @@ public class TD_Game extends ApplicationAdapter {
 		img = new Texture("dot.jpg");
 		
 		unit1 = new Unit("A", new Vector2(200f,200f), 10f, new Vector2(1f,0f), true, img);
+		unit2 = new Unit("A", new Vector2(300f,300f), 10f, new Vector2(1f,0f), true, img);
 		_world.addObject(unit1);
+		_world.addObject(unit2);
 		
 		batch = new SpriteBatch();
 		Eng = new TD_Engine(_world,"TDE");
