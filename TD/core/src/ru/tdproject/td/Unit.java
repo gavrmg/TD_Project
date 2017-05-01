@@ -61,10 +61,11 @@ public class Unit extends UnitObject {
 	@Override
 	public void draw(SpriteBatch batch) {
 		// TODO Auto-generated method stub
+		synchronized (lock) {
 		Texture img = getImg();
 		batch.draw(img, getPosition().x, getPosition().y);
 		System.out.println("In Draw... "+getPosition().x+" "+ getPosition().y);
-		
+		}		
 	}
 
 }
