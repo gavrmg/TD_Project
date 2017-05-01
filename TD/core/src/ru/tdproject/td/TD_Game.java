@@ -6,18 +6,26 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
 public class TD_Game extends ApplicationAdapter {
 	SpriteBatch batch;
 	Texture img;
 	TD_Engine Eng;
 	//OrthographicCamera camera;
-	TestLogic logic;
+	World _world;
+	Unit unit1;
+	
 	@Override
 	public void create () {
-		logic = new TestLogic();
-		batch = new SpriteBatch();
+		_world = new World();
 		img = new Texture("dot.jpg");
-		Eng = new TD_Engine(logic,"TDE");
+		
+		unit1 = new Unit("A", new Vector2(200f,200f), 10f, new Vector2(1f,0f), true, img);
+		_world.addObject(unit1);
+		
+		batch = new SpriteBatch();
+		Eng = new TD_Engine(_world,"TDE");
+		
 		Thread eng_thr = new Thread(Eng);
 		eng_thr.start();
 		
@@ -31,9 +39,8 @@ public class TD_Game extends ApplicationAdapter {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		//batch.setProjectionMatrix(camera.combined);
 		batch.begin();
-		batch.draw(img, logic.getPos().x, logic.getPos().y);
+		_world.draw(batch);
 		batch.end();
-		System.out.println("In Render..."+logic.getPos().x+" "+ logic.getPos().y);
 		//camera.update();
 	}
 	

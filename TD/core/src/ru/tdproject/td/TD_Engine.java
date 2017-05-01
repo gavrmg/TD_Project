@@ -1,15 +1,15 @@
 package ru.tdproject.td;
 public class TD_Engine implements Runnable {
-	private TestLogic pr_Logic =null;
-	private String Name= null;
-	public TD_Engine(TestLogic pr_Logic, String name) {
+	private World _world = null;
+	private String Name = null;
+	public TD_Engine(World world, String name) {
 		super();
-		this.pr_Logic = pr_Logic;
+		this._world = world;
 		this.Name = name;
 	}
 	public void run(){
 		while (true){
-			pr_Logic.move();
+			_world.move();
 			try {
 				Thread.sleep(200);
 			}
