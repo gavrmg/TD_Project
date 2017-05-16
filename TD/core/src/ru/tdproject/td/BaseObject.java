@@ -40,7 +40,9 @@ public abstract class BaseObject {
 
 	//
 	private String type;
-	public abstract String gettype();
+	public String gettype() {
+		return type;
+	}
 
 	
 	// признак неподвижности объекта

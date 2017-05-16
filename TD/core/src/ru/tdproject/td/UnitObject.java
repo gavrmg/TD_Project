@@ -1,7 +1,7 @@
 package ru.tdproject.td;
 
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.*;
 
 public abstract class UnitObject extends BaseObject {
 
@@ -11,10 +11,11 @@ public abstract class UnitObject extends BaseObject {
 		
 	}
 	
-	public UnitObject(String type, Vector2 pos, float speed, Vector2 arrow, boolean isSolid, Texture img) {
-		super(type, pos, speed, arrow);
+	public UnitObject(String type, float speed, Vector2 arrow, boolean isSolid, Texture img,Circle form) {
+		super(type, arrow, speed, arrow);
 		// TODO Auto-generated constructor stub
 		this.isSolid = isSolid;
+		this.Form = form;
 		setImg(img);
 	}
 
@@ -36,6 +37,22 @@ public abstract class UnitObject extends BaseObject {
 		this.isSolid = isSolid;
 	}
 
+	public UnitObject(String type, Circle form) {
+		super(type);
+		Form = form;
+	}
+
+
 	//
 	private boolean isSolid;
+	
+	
+	private Circle Form;
+	public Circle getForm() {
+		return Form;
+	}
+
+	public void setForm(Circle form) {
+		Form = form;
+	}
 }

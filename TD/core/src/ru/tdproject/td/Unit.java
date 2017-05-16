@@ -2,6 +2,7 @@ package ru.tdproject.td;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
@@ -23,8 +24,8 @@ public class Unit extends UnitObject {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Unit(String type, Vector2 pos, float speed, Vector2 arrow, boolean isSolid, Texture img) {
-		super(type, pos, speed, arrow, isSolid,img);
+	public Unit(String type, float speed, Vector2 arrow, boolean isSolid, Texture img,Circle form) {
+		super(type, speed, arrow, isSolid,img,form);
 		// TODO Auto-generated constructor stub
 	}
 
@@ -33,11 +34,11 @@ public class Unit extends UnitObject {
 		// TODO Auto-generated constructor stub
 	}
 
-	@Override
-	public String gettype() {
-		// TODO Auto-generated method stub
-		return gettype();
-	}
+//	@Override
+//	public String gettype() {
+//		// TODO Auto-generated method stub
+//		return type;
+//	}
 
 	Object lock = new Object();
 
@@ -48,12 +49,14 @@ public class Unit extends UnitObject {
 		synchronized (lock) {
 			float speed = getSpeed();
 			Vector2 arrow  = getArrow();
-			Vector2 pos = getPosition();
-			arrow.x = MathUtils.cos(t);
-			arrow.y = MathUtils.sin(t);
+			Vector2 pos = new Vector2(getForm().x,getForm().y);
+			//arrow.x = MathUtils.cos(t);
+			//arrow.y = MathUtils.sin(t);
 			pos.x += speed * arrow.x;
 			pos.y += speed * arrow.y;
-			t += 0.1;
+			getForm().x = pos.x;
+			getForm().y = pos.y;
+			//t += 0.1;
 			setArrow(arrow);
 		}
 	}
@@ -63,9 +66,9 @@ public class Unit extends UnitObject {
 		// TODO Auto-generated method stub
 		synchronized (lock) {
 		Texture img = getImg();
-		batch.draw(img, getPosition().x, getPosition().y);
-		System.out.println("In Draw... "+getPosition().x+" "+ getPosition().y);
+		batch.draw(img, getForm().x, getForm().y);
+		System.out.println("In Draw... "+getForm().x+" "+ getForm().y);
 		}		
 	}
-
+	
 }
