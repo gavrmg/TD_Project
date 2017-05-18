@@ -18,13 +18,14 @@ public class TD_Game extends ApplicationAdapter {
 	Vector2 Castle;
 	Vector2 Spawn;
 	TDInputHandler InputHandler;
+	public static TDContext _context = new TDContext();
 	@Override
 	public void create () {
 		Castle = new Vector2(200f,200f);
 		Spawn = new Vector2(200f,600f);
 		_world = new World(Castle,Spawn);
 		//img = new Texture("dot.jpg");
-		InputHandler = new TDInputHandler(_world);
+		InputHandler = new TDInputHandler(_world, _context);
 		
 		batch = new SpriteBatch();
 		Eng = new TD_Engine(_world,"TDE");
