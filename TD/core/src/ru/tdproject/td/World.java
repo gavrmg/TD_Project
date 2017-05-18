@@ -72,7 +72,7 @@ public class World {
 	}
 
 	public void draw(SpriteBatch batch) {
-		synchronized (Units) {
+		synchronized (lock) {
 			for (BaseObject object : Units) {
 				object.draw(batch);
 			}
