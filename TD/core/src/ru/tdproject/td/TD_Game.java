@@ -17,14 +17,14 @@ public class TD_Game extends ApplicationAdapter {
 	Unit unit1,unit2;
 	Vector2 Castle;
 	Vector2 Spawn;
-
+	TDInputHandler InputHandler;
 	@Override
 	public void create () {
 		Castle = new Vector2(200f,200f);
 		Spawn = new Vector2(200f,600f);
 		_world = new World(Castle,Spawn);
 		//img = new Texture("dot.jpg");
-		
+		InputHandler = new TDInputHandler(_world);
 		
 		batch = new SpriteBatch();
 		Eng = new TD_Engine(_world,"TDE");
@@ -43,7 +43,7 @@ public class TD_Game extends ApplicationAdapter {
 		batch.setProjectionMatrix(camera.combined);
 		batch.begin();
 		_world.draw(batch);
-		System.out.println(batch.maxSpritesInBatch);
+		//System.out.println(batch.maxSpritesInBatch);
 		batch.end();
 		camera.update();
 	}

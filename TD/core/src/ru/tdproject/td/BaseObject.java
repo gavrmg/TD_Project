@@ -2,49 +2,47 @@ package ru.tdproject.td;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Circle;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
 public abstract class BaseObject {
-	public BaseObject(String type) {
-		this.type = type;
-		this.position.x = 0.0f;
-		this.position.y = 0.0f;
-		speed = 1f;
-		arrow.x = 1f;
-		arrow.y  = 0f;
-	} 
 
-	public BaseObject(String type, Vector2 pos) {
+	public BaseObject(String type, Circle form, float speed, Vector2 arrow, Texture img,World world) {
 		this.type = type;
-		this.position = pos;
-		speed = 1f;
-		arrow.x = 1f;
-		arrow.y  = 0f;
-	} 
-
-	public BaseObject(String type, Vector2 pos, float speed, Vector2 arrow) {
-		this.type = type;
-		this.position = pos;
+		this.Form = form;
 		this.speed = speed;
 		this.arrow = arrow;
+		this.img=img;
+		this.__world = world;
 	} 
 	
+	private World __world = null;
 	//
-	private Vector2 position;
-	public Vector2 getPosition() {
-		return position;
-	};
-	public Vector2 setPosition() {
-		return position;
-	};
+	public void setWorld(World world){
+		this.__world = world;
+	}
+	public World get__world() {
+		return __world;
+	}
 
-	//
 	private String type;
 	public String gettype() {
 		return type;
 	}
-
+	private int life;
 	
+	public int getLife() {
+		return life;
+	}
+	public void setLife(int life) {
+		this.life = life;
+	}
+	public void decLife(int damage) {
+		this.life -= damage;
+	}
+
+
 	// признак неподвижности объекта
 	private Boolean frozen;
 	public Boolean getFrozen() {
@@ -81,11 +79,27 @@ public abstract class BaseObject {
 	public void setImg(Texture img) {
 		this.img = img;
 	}
+	private Circle Form;
+	public Circle getForm() {
+		return Form;
+	}
+
+	public void setForm(Circle form) {
+		Form = form;
+	}
+	Object lock = new Object();
 
 	// перемешение объекта в World
-	public abstract void move();
-	// отрисовка на сцене
-	public abstract void draw(SpriteBatch batch); 
+	public void draw(SpriteBatch batch) {
+		synchronized (lock) {
+		Texture img = getImg();
+		batch.draw(img, getForm().x, getForm().y);
+		//System.out.println("In Draw... "+getForm().x+" "+ getForm().y);
+		}		
+
+	}
+	
+	public abstract void step(Rectangle Border);
 	
 	
 }
