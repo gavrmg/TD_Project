@@ -19,7 +19,7 @@ public abstract class BaseObject {
 	
 	private World __world = null;
 	//
-	public void setWorld(World world){
+	public void set__world(World world){
 		this.__world = world;
 	}
 	public World get__world() {
@@ -87,7 +87,7 @@ public abstract class BaseObject {
 	public void setForm(Circle form) {
 		Form = form;
 	}
-	Object lock = new Object();
+	private Object lock = new Object();
 
 	// перемешение объекта в World
 	public void draw(SpriteBatch batch) {
@@ -99,6 +99,12 @@ public abstract class BaseObject {
 
 	}
 	
+	public Object getLock() {
+		return lock;
+	}
+	public void setLock(Object lock) {
+		this.lock = lock;
+	}
 	public abstract void step(Rectangle Border);
 	
 	
