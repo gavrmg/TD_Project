@@ -1,7 +1,7 @@
 package ru.tdproject.td;
 
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.*;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
@@ -18,7 +18,9 @@ public class World {
 		//=new ArrayList<BaseObject>();
 		CastlePos=Castle;
 		SpawnPos=Spawn;
+		toAdd = new ArrayList<BaseObject>();
 	}
+	public Object Iter_lock = new Object();
 
 	public Vector2 getCastlePos() {
 		return CastlePos;
@@ -67,24 +69,45 @@ public class World {
 
 	public void addObject(BaseObject obj) {
 		synchronized (lock) {
-			Units.add(obj);
+			toAdd.add(obj);
 		}
 	}
 
 	public void draw(SpriteBatch batch) {
 		synchronized (lock) {
-			for (BaseObject object : Units) {
-				object.draw(batch);
+			if (!toAdd.isEmpty()) {
+				Units.addAll(toAdd);
+				toAdd.clear();
 			}
+			Iterator i = Units.iterator();
+			Boolean flag = false;
+			BaseObject u = null;
+			while (i.hasNext())
+			{
+				synchronized (Iter_lock) {
+					u = (BaseObject) i.next();
+					u.draw(batch);
+				}
+			}		
 			getGoal().draw(batch);
 		}
 	}
-
+	ArrayList<BaseObject> toAdd;
 	public void move() {
 		synchronized (lock) {
-			for (BaseObject object : Units) {
-				object.step(Border);
+			if (!toAdd.isEmpty()) {
+				Units.addAll(toAdd);
+				toAdd.clear();
 			}
+			ListIterator i = Units.listIterator();
+			BaseObject u = null;
+			synchronized (Iter_lock) {
+			while (i.hasNext())
+				{
+					u = (BaseObject) i.next();
+					u.step(Border);
+				}
+		}	
 		}
 	}
 
@@ -98,7 +121,7 @@ public class World {
 		synchronized (lock) {
 			Vector2 pos = new Vector2(Rand.nextInt(800), Rand.nextInt(800));
 			Vector2 arr = new Vector2(getCastlePos().x - pos.x, getCastlePos().y - pos.y).nor();
-			Unit s_unit = new Unit(new Circle(pos, 1), 0.2f, img, this);
+			Unit s_unit = new Unit(new Circle(pos, 10), 0.2f, img, this);
 			s_unit.setArrow(arr);
 			addObject(s_unit);
 			// System.
@@ -108,7 +131,7 @@ public class World {
 		synchronized (lock) {
 			Vector2 pos = new Vector2(x,y);
 			Vector2 arr = new Vector2(1,0).nor();
-			Tower s_tower = new Tower("Tower", new Circle(pos, 2),0, arr, img = new Texture(Gdx.files.internal("tower.png")), this, 400, 10);
+			Tower s_tower = new Tower("Tower", new Circle(pos, 2),0, arr, img = new Texture(Gdx.files.internal("tower.png")), this, 400, 100);
 			//s_tower.setArrow(arr);
 			addObject(s_tower);
 			// System.
@@ -134,9 +157,11 @@ public class World {
 		BaseObject u = null;
 		while (i.hasNext())
 		{
+			synchronized (Iter_lock) {
 			u = (BaseObject) i.next();
-			if (u.getLife() <= 0)
-				i.remove();
+				if (u.getLife() <= 0)
+					i.remove();
+			}
 		}
 	}
 	// создать метод возврата объекта по форме (вход - координаты)

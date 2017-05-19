@@ -15,7 +15,7 @@ public class Unit extends BaseObject  {
 
 	public Unit(Circle form, float speed, Texture img, World world) {
 		super("Unit",form, speed, new Vector2(1f,0f), img, world);
-		this.setLife(10);
+		this.setLife(2);
 	}
 
 	
@@ -33,7 +33,7 @@ public class Unit extends BaseObject  {
 	private float t = 0f;
 	@Override
 	public void step(Rectangle Border) {
-		synchronized (lock) {
+		synchronized (get__world().lock) {
 			float speed = getSpeed();
 			Vector2 arrow  = getArrow();
 			Vector2 pos = new Vector2(getForm().x,getForm().y);
