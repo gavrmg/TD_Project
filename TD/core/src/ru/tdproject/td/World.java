@@ -11,8 +11,11 @@ import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.RandomXS128;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.maps.*;
+import com.badlogic.gdx.maps.Map;
 
-public class World {
+public class World  {
 
 	private Castle Goal;
 	private ArrayList<BaseObject> toAdd;
@@ -132,15 +135,13 @@ public class World {
 		}
 	}
 
-	public void createTower(int x, int y) {
+	public void createTower(float x, float y) {
 		synchronized (lock) {
 			Vector2 pos = new Vector2(x, y);
 			Vector2 arr = new Vector2(1, 0).nor();
 			Tower s_tower = new Tower("Tower", new Circle(pos, 2), 0, arr,
 					img = new Texture(Gdx.files.internal("tower.png")), this, 400, 100);
-			// s_tower.setArrow(arr);
 			addObject(s_tower);
-			// System.
 		}
 	}
 
@@ -149,25 +150,8 @@ public class World {
 			System.out.println("!");
 	}
 
-	// private predicate<BaseObject> IsDead(){
-	// return p -> p.getLife <=0;
-	// }
 	public void checkDead() {
-		// for (BaseObject object : Units)
-		// if (object.getLife() <= 0)
-		// synchronized (Units) {
-		// boolean o = Units.remove(object);System.out.println(o);
-		////// Units.removeIf(getLife<=0)
-		// }
 		Predicate<BaseObject> isDead = obj -> obj.getLife() <= 0;
-		// Iterator i = Units.iterator();
-		// BaseObject u = null;
-		// while (i.hasNext())
-		// {
-		// u = (BaseObject) i.next();
-		// if (u.getLife() <= 0)
-		// i.remove();
-		// }
 		synchronized (Iter_lock) {
 			Units.removeIf(isDead);
 		}
@@ -181,5 +165,9 @@ public class World {
 	public void setUnits(ArrayList<BaseObject> units) {
 		Units = units;
 	}
-
+	
+//	public BaseObject getNearestUnit(){
+//		return ;
+//	};
+	
 }

@@ -25,7 +25,7 @@ public class TD_Game extends ApplicationAdapter {
 		Spawn = new Vector2(200f,600f);
 		_world = new World(Castle,Spawn);
 		//img = new Texture("dot.jpg");
-		InputHandler = new TDInputHandler(_world, _context);
+		InputHandler = new TDInputHandler(_world,this, _context);
 		
 		batch = new SpriteBatch();
 		Eng = new TD_Engine(_world,"TDE");
@@ -41,7 +41,10 @@ public class TD_Game extends ApplicationAdapter {
 	public void render () {
 		Gdx.gl.glClearColor(1, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		camera.translate(InputHandler.Delta.x,InputHandler.Delta.y);
+		//camera.translate(1,1);
 		batch.setProjectionMatrix(camera.combined);
+		//System.out.println(camera.combined);
 		batch.begin();
 		_world.draw(batch);
 		//System.out.println(batch.maxSpritesInBatch);
