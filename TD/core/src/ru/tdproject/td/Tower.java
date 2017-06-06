@@ -6,42 +6,55 @@ import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
-public class Tower extends BaseObject {
-
-	public Tower(String type, Circle form, float speed, Vector2 arrow, Texture img, World world, float AttackRange,
-			int Cooldown) {
-		super(type, form, speed, arrow, img, world);
-		this.AttackRange = new Circle(getForm().x, getForm().y, AttackRange);
-		this.Cooldown = Cooldown;
-		this.setLife(2);
-		this.P_Img = new Texture("projectile.png");
-
-		// TODO Auto-generated constructor stub
+public class Tower extends BaseObject  {
+	private float AttackRange;
+	private attackType AttackType;
+	private String Type;
+	private int Health;
+	public Tower(String Type,Texture img, float attackRange, int health) {
+		//super();
+		setImg(img);
+		AttackRange = attackRange;
+		AttackType = attackType.Ranged;
+		Health = health;
+		this.Type = Type;
 	}
-
-	private Texture P_Img;
-	private Circle AttackRange;
-	private int Cooldown;
-	private int Time = 0;
-
-	private void Attack_by_Projectile(BaseObject Target, int Damage) {
-		get__world().addObject(new Projectile(new Circle(this.getForm().x, this.getForm().y, 0), 0.6f, P_Img,
-				get__world(), Damage, Target));
+	public float getAttackRange() {
+		return AttackRange;
 	}
-
+	public void setAttackRange(float attackRange) {
+		AttackRange = attackRange;
+	}
+	public attackType getAttackType() {
+		return AttackType;
+	}
+	public void setAttackType(attackType attackType) {
+		AttackType = attackType;
+	}
+	public int getHealth() {
+		return Health;
+	}
+	public void setHealth(int health) {
+		Health = health;
+	}
 	@Override
-	public void step(Rectangle Border) {
-		if (Time == 0) {
-			for (BaseObject o : get__world().getUnits()) {
-
-				if (AttackRange.contains(o.getForm().x, o.getForm().y) && o.gettype() != "Tower") {
-					Attack_by_Projectile(o, 1);
-					Time = Cooldown;
-					break;
-				}
-			}
-		} else
-			Time--;
+	public void step(TDWorld world){
+		
 	}
+	@Override
+	public ru.tdproject.td.ObjectType getObjectType() {
+		// TODO Auto-generated method stub
+		return ObjectType.Active;
+	}
+	@Override
+	public String getType() {
+		// TODO Auto-generated method stub
+		return Type;
+	}
+
+
+
+
+
 
 }
