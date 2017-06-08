@@ -63,7 +63,7 @@ public Vector2 angleToVector(Vector2 outVector, float angle) {
 }
 @Override
 public Location<Vector2> newLocation() {
-	return this;
+	return new Castle(10,this.getImg(),;
 }
 
 	
