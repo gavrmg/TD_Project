@@ -6,7 +6,7 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 public class TDInputHandler implements InputProcessor  {
-	private TD_Engine Eng;
+	private TDWorld world;
 	private TD_Game _game;
 	private TDContext _context;
 	private Vector2 prevPosition;
@@ -14,8 +14,8 @@ public class TDInputHandler implements InputProcessor  {
 	Buttons _buttons = new Buttons();
 	Keys _keys = new Keys();
 	public Vector2 Delta;
-	public TDInputHandler(TD_Engine eng,TD_Game _game, TDContext _context) {
-		this.Eng = eng;
+	public TDInputHandler(TDWorld world,TD_Game _game, TDContext _context) {
+		this.world = world;
 		this._game = _game;
 		this._context = _context;
 		this.currentPosition = new Vector3(0,0,0);
@@ -55,11 +55,11 @@ public class TDInputHandler implements InputProcessor  {
 
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-		if (button == _buttons.LEFT){
+		if (button == Buttons.LEFT){
 			currentPosition.set((float) screenX, (float)screenY, 0);
-			currentPosition.set(_game.camera.unproject(currentPosition));
-//			Eng.createTower(5,100,5,currentPosition.x, currentPosition.y);
-			System.out.println(_game.camera.unproject(currentPosition).x+" "+(_context.HEIGHT - _game.camera.unproject(currentPosition).y));
+			System.out.println(currentPosition.x+" "+(_context.HEIGHT - currentPosition.y));
+			(currentPosition.set(_game.camera.unproject(currentPosition))).scl(1f/TDContext.PIX_TO_METER);
+			world.createTower(5, world.TowerImg, 100, 5, 0, currentPosition.x, currentPosition.y);
 		}
 		return true;
 	}

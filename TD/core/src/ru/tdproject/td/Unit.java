@@ -30,21 +30,17 @@ public class Unit extends BaseObject implements Steerable<Vector2> {
 	private int Health;
 	private String Type;
 	private float speed;
-	private Body body;
+	//private Body body;
 	private Seek<Vector2> seek;
 	private SteeringAcceleration<Vector2> SeekOutput;
-	private TDWorld _world;
 	public Unit(String Type,Texture img, float attackRange, attackType attackType, int health,float speed,Body body,TDWorld _world) {
-		//super();
-		setImg(img);
+		super(_world,body,img);
 		AttackRange = attackRange;
 		AttackType = attackType;
 		Health = health;
 		this.Type = Type;
 		this.speed = speed;
-		this.body = body;
 		SeekOutput = new SteeringAcceleration<Vector2>(getLinearVelocity());
-		this._world = _world;
 		seek = new Seek<Vector2>(this, _world.getCastle());
 		//Location choice to be moved to logic
 	}
@@ -52,10 +48,11 @@ public class Unit extends BaseObject implements Steerable<Vector2> {
 	//Logic step
 	
 	@Override
-	public void step(TDWorld world){
+	public void step(){
 		seek.calculateSteering(SeekOutput);
 		//System.out.println(SeekOutput.linear);
 		body.setLinearVelocity(SeekOutput.linear);
+		//System.out.println(SeekOutput.linear);
 	}
 	
 	//Getters, setters and implemented functions
@@ -77,11 +74,6 @@ public class Unit extends BaseObject implements Steerable<Vector2> {
 	}
 	public void setHealth(int health) {
 		Health = health;
-	}
-	@Override
-	public ru.tdproject.td.ObjectType getObjectType() {
-		// TODO Auto-generated method stub
-		return ObjectType.Active;
 	}
 	@Override
 	public String getType() {
@@ -110,26 +102,6 @@ public class Unit extends BaseObject implements Steerable<Vector2> {
 		return (float) Math.atan2(((Vector2) vector).y,((Vector2) vector).x);
 	}
 	@Override
-	public Vector2 angleToVector(Vector2 outVector, float angle) {
-		// TODO Auto-generated method stub
-		return ((Vector2)outVector).set((float)Math.sin(angle),(float)Math.cos(angle));
-	}
-	@Override
-	public Location newLocation() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	@Override
-	public float getZeroLinearSpeedThreshold() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-	@Override
-	public void setZeroLinearSpeedThreshold(float value) {
-		// TODO Auto-generated method stub
-		
-	}
-	@Override
 	public float getMaxLinearSpeed() {
 		// TODO Auto-generated method stub
 		return speed;
@@ -142,7 +114,7 @@ public class Unit extends BaseObject implements Steerable<Vector2> {
 	@Override
 	public float getMaxLinearAcceleration() {
 		// TODO Auto-generated method stub
-		return 0;
+		return 1;
 	}
 	@Override
 	public void setMaxLinearAcceleration(float maxLinearAcceleration) {
@@ -152,7 +124,7 @@ public class Unit extends BaseObject implements Steerable<Vector2> {
 	@Override
 	public float getMaxAngularSpeed() {
 		// TODO Auto-generated method stub
-		return 0;
+		return 1;
 	}
 	@Override
 	public void setMaxAngularSpeed(float maxAngularSpeed) {
@@ -162,7 +134,7 @@ public class Unit extends BaseObject implements Steerable<Vector2> {
 	@Override
 	public float getMaxAngularAcceleration() {
 		// TODO Auto-generated method stub
-		return 0;
+		return 10;
 	}
 	@Override
 	public void setMaxAngularAcceleration(float maxAngularAcceleration) {
@@ -191,6 +163,18 @@ public class Unit extends BaseObject implements Steerable<Vector2> {
 	}
 	@Override
 	public void setTagged(boolean tagged) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public float getZeroLinearSpeedThreshold() {
+		// TODO Auto-generated method stub
+		return 0.01f;
+	}
+
+	@Override
+	public void setZeroLinearSpeedThreshold(float value) {
 		// TODO Auto-generated method stub
 		
 	}

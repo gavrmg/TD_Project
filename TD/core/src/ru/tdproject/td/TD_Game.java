@@ -43,6 +43,7 @@ public class TD_Game extends ApplicationAdapter {
 	Array<Body> bodies;
 	int CountBodies;
 	public static TDContext _context = new TDContext();
+	BaseObject o;
 	public MessageDispatcher TD_Msg;
 //	Matrix4 MeterToTile = new Matrix4(20,0,0,0, 0, 20, 0, 0, 0,0,1,0,0,0,0,1);
 	//float[] MTT = {20,0,0,0,20,0,0,0,1}; // To move to context
@@ -60,7 +61,7 @@ public class TD_Game extends ApplicationAdapter {
 		AI = new GameAIThread(_world);
 		//img = new Texture("dot.jpg");
 		batch = new SpriteBatch();
-		InputHandler = new TDInputHandler(Eng,this, _context);
+		InputHandler = new TDInputHandler(_world,this, _context);
 		//Eng = new TD_Engine()
 		Thread eng_thr = new Thread(Eng);
 		Thread AIThread = new Thread(AI); 
@@ -73,6 +74,7 @@ public class TD_Game extends ApplicationAdapter {
 		MapRender = new OrthogonalTiledMapRenderer(_world.getMap());
 		bodies = new Array<Body>();
 		CountBodies = bodies.size;
+		Iterator iter;
 	}
 
 	@Override
@@ -85,22 +87,12 @@ public class TD_Game extends ApplicationAdapter {
 		MapRender.setView(camera);
 		MapRender.render();
 		batch.begin();
-		if (_world.getWorld().getBodyCount()!=CountBodies)
-			synchronized (_world.Iter_lock) {
-				_world.getWorld().getBodies(bodies);
-				CountBodies = _world.getWorld().getBodyCount();
-			}
-		for (Body o : bodies)
-		{
-			if (((BaseObject) o.getUserData()).getObjectType() == ObjectType.Static && o != null) {
-		//		System.out.println(CountBodies);
-	//			System.out.println(o.getPosition());
-			}
-			if (((BaseObject) o.getUserData()).getObjectType() == ObjectType.Active && o != null) {
-				ScreenCoords.set(o.getPosition(), 1);
-				ScreenCoords.mul(_context.METER_TO_TILE);
-				batch.draw(((BaseObject) o.getUserData()).getImg(), ScreenCoords.x, ScreenCoords.y);
-//				System.out.println(o.getPosition());
+		
+		synchronized (_world.Iter_lock) {
+			iter = _world.getUnits().iterator();
+			while (iter.hasNext()) {
+				o = (BaseObject) iter.next();
+				o.draw(batch);
 			}
 		}
 		batch.end();

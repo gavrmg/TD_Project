@@ -10,13 +10,12 @@ import com.badlogic.gdx.physics.box2d.Body;
 public class Castle extends BaseObject implements Location<Vector2>  {
 private int health;
 private String Type;
-private Body body;
-public Castle(int health,Texture img, String type,Body body) {
-	//super();
+public Castle(int health,Texture img, String type,Body body,TDWorld world) {
+	super(world,body,img);
 	this.health = health;
 	Type = type;
-	setImg(img);
-	this.body = body;
+	//setImg(img);
+	//this.body = body;
 }
 public int getHealth() {
 	return health;
@@ -31,14 +30,9 @@ public void setType(String type) {
 	Type = type;
 }
 @Override
-public void step(TDWorld world) {
+public void step() {
 	// TODO Auto-generated method stub
 	
-}
-@Override
-public ru.tdproject.td.ObjectType getObjectType() {
-	// TODO Auto-generated method stub
-	return null;
 }
 @Override
 public Vector2 getPosition() {
@@ -63,7 +57,7 @@ public Vector2 angleToVector(Vector2 outVector, float angle) {
 }
 @Override
 public Location<Vector2> newLocation() {
-	return new Castle(10,this.getImg(),;
+	return null;
 }
 
 	

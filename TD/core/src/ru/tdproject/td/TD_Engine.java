@@ -1,5 +1,7 @@
 package ru.tdproject.td;
 
+import java.util.Iterator;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Circle;
@@ -18,42 +20,59 @@ public class TD_Engine implements Runnable {
 	private Texture UnitImg = new Texture("dot.jpg");
 	private Texture TowerImg = new Texture("tower.png");
 	private Texture CastleImg = new Texture("castle.png");
-	long sum = 0;
-	long i;
-	long start,current;
+	private Iterator iter;
+	boolean lag_flag;
+	BaseObject CurrentUnit;
+
+	long WorkTime = 0;
+	long lag = 0;
+	long start, current;
+
 	public TD_Engine(TDWorld _world, String name) {
 		super();
 		this._world = _world;
 		this.Name = name;
 		Iter_lock = new Object();
-//		_world.setGoal(new Castle(new Circle(_world.getCastlePos(),2), new Texture(Gdx.files.internal("castle.png")),_world));
-		this.CastlePos = new Vector2(20f,20f);
+		// _world.setGoal(new Castle(new Circle(_world.getCastlePos(),2), new
+		// Texture(Gdx.files.internal("castle.png")),_world));
+		this.CastlePos = new Vector2(20f, 20f);
 		_world.initWorld();
-		_world.createCastle(10,CastleImg,10,0, CastlePos.x,CastlePos.y, 0);
-		_world.createUnit(1, UnitImg, 10, attackType.Melee, 10, 10, 4, 1);
+		_world.createUnit(1, UnitImg, 2, attackType.Melee, 10, 2, 4, 1);
+		lag_flag = false;
 		System.out.println("Engine!");
 	}
-	public void run(){
+
+	public void run() {
 		System.out.println("Working!");
-		while(true){
-			sum = 0;
+		while (true) {
 			start = System.currentTimeMillis();
 			synchronized (_world.Iter_lock) {
-				_world.getWorld().step(1 / 100f, 10, 10);
-			//	System.out.println("I'm here");
+				if (!lag_flag)
+					WorkTime = 0;
+				_world.getWorld().step(1 / 100f, 6, 2);
 			}
 			current = System.currentTimeMillis();
-			sum=(current-start);
-			try {
-				Thread.sleep(10-sum);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+
+			WorkTime = (current - start);
+			if (WorkTime <= 10) {
+				if (lag_flag)
+					lag -= WorkTime;
+				try {
+					Thread.sleep(10 - WorkTime - lag);
+					lag = 0;
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IllegalArgumentException e) {
+					System.out.println(WorkTime);
+				}
+			} else {
+				lag = WorkTime - 10 + lag;
+				lag_flag = true;
 			}
 		}
 	}
 }
 
-	//public void 
-	//1 tile = 1 meter
-	
+// public void
+// 1 tile = 1 meter

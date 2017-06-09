@@ -5,14 +5,15 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
 
 public class Tower extends BaseObject  {
 	private float AttackRange;
 	private attackType AttackType;
 	private String Type;
 	private int Health;
-	public Tower(String Type,Texture img, float attackRange, int health) {
-		//super();
+	public Tower(String Type,Texture img, float attackRange, int health,Body body, TDWorld world) {
+		super(world,body,img);
 		setImg(img);
 		AttackRange = attackRange;
 		AttackType = attackType.Ranged;
@@ -38,13 +39,8 @@ public class Tower extends BaseObject  {
 		Health = health;
 	}
 	@Override
-	public void step(TDWorld world){
+	public void step(){
 		
-	}
-	@Override
-	public ru.tdproject.td.ObjectType getObjectType() {
-		// TODO Auto-generated method stub
-		return ObjectType.Active;
 	}
 	@Override
 	public String getType() {

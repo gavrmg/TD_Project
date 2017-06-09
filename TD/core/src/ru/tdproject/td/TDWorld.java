@@ -1,4 +1,6 @@
 package ru.tdproject.td;
+import java.util.ArrayList;
+
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapLayers;
@@ -21,18 +23,22 @@ public class TDWorld {
 	private World World;
 	private TiledMap Map;
 	public Object Iter_lock = new Object();
-	private Texture UnitImg = new Texture("dot.jpg");
-	private Texture TowerImg = new Texture("tower.png");
+	public Texture UnitImg = new Texture("dot.jpg");
+	public Texture TowerImg = new Texture("tower.png");
 	private Texture CastleImg = new Texture("castle.png");
 	private Vector2 MaxCoordsPix;
 	private TDContext _context = new TDContext();
 	private Castle castle;
+	private ArrayList<BaseObject> Units;
+	private ArrayList<BaseObject> ToAdd;
 	public TDWorld(TiledMap map) {
 		super();
 		World = new com.badlogic.gdx.physics.box2d.World(new Vector2(0,0),true);
 		Map = map;
 		//MaxCoordsPix = new Vector2(map.getProperties().get(key))
 		System.out.println(map.getProperties().getKeys().toString());
+		Units = new ArrayList<BaseObject>();
+		ToAdd = new ArrayList<BaseObject>();
 		castle = createCastle(10, CastleImg, 0, 10, 0, 10f, 10f);
 	}
 	public Castle getCastle() {
@@ -83,31 +89,43 @@ public class TDWorld {
 	public void createUnit(float Size,Texture img,float attackRange,attackType AT,int Health,float speed,float x, float y){
 		CircleShape shape = new CircleShape();
 		shape.setRadius(Size);
-		synchronized (Iter_lock) {
-			Body body = CreateWorldActorBody(1, x, y, BodyType.KinematicBody, shape);
-			Unit ThisUnit = new Unit("Unit", img, attackRange,AT, Health,speed,body,this);
-			body.setUserData(ThisUnit);
-		}
+		Body body = CreateWorldActorBody(1, x, y, BodyType.KinematicBody, shape);
+		Unit ThisUnit = new Unit("Unit", img, attackRange,AT, Health,speed,body,this);
+		body.setUserData(ThisUnit);
+			ToAdd.add(ThisUnit);
 		shape.dispose();
+	}
+	public ArrayList<BaseObject> getUnits() {
+		return Units;
+	}
+	public void setUnits(ArrayList<BaseObject> units) {
+		Units = units;
 	}
 	public void createTower(float Size,Texture img,float attackRange,int Health,float speed,float x, float y){
 		CircleShape shape = new CircleShape();
 		shape.setRadius(Size);
-		Tower ThisUnit = new Tower("Tower", img, attackRange, Health);
 		synchronized (Iter_lock) {
 			Body body = CreateWorldActorBody(1, x, y, BodyType.StaticBody, shape);
+			Tower ThisUnit = new Tower("Tower", img, attackRange, Health, body, this);
 			body.setUserData(ThisUnit);
-		}
+			ToAdd.add(ThisUnit);
+	}
 		shape.dispose();
+	}
+	public ArrayList<BaseObject> getToAdd() {
+		return ToAdd;
+	}
+	public void setToAdd(ArrayList<BaseObject> toAdd) {
+		ToAdd = toAdd;
 	}
 	public Castle createCastle(float Size,Texture img,float attackRange,int Health,float speed,float x, float y){
 		CircleShape shape = new CircleShape();
 		shape.setRadius(Size);
 		synchronized (Iter_lock) {
 			Body body = CreateWorldActorBody(1, x, y, BodyType.StaticBody, shape);
-			Castle ThisUnit = new Castle(Health, img,  "Castle",body);
-			body.setUserData(ThisUnit);
+			Castle ThisUnit = new Castle(Health, img,  "Castle",body,this);
 			shape.dispose();
+			Units.add(ThisUnit);
 			return ThisUnit;
 		}
 	}
@@ -126,7 +144,7 @@ public class TDWorld {
 		PolygonShape shape = new PolygonShape(); 
 		Vector2 Center = new Vector2();
 		Rectangle obj = new Rectangle();
-		body.setUserData(new SolidObject());
+		//body.setUserData(new SolidObject());
 		MapObjects objects = new MapObjects();
 		MapLayers Layers = Map.getLayers();
 		synchronized (Iter_lock) {
