@@ -19,12 +19,15 @@ import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
+
+import ru.tdproject.td.GameLogic.ActiveGameObject;
+
 import com.badlogic.gdx.ai.steer.Steerable;
 import com.badlogic.gdx.ai.steer.SteeringAcceleration;
 import com.badlogic.gdx.ai.steer.SteeringBehavior;
 import com.badlogic.gdx.ai.steer.behaviors.Seek;
 import com.badlogic.gdx.ai.utils.Location;
-public class Unit extends BaseObject implements Steerable<Vector2> {
+public class Unit extends BaseObject implements Steerable<Vector2>,ActiveGameObject {
 	private float AttackRange;
 	private attackType AttackType;
 	private int Health;
@@ -177,6 +180,24 @@ public class Unit extends BaseObject implements Steerable<Vector2> {
 	public void setZeroLinearSpeedThreshold(float value) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public void Attack(ActiveGameObject Target) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void TakeDamage(int Damage) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public ActiveGameObject GetThisObject() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

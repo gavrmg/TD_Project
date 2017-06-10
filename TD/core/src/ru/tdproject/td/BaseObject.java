@@ -8,13 +8,11 @@ import com.badlogic.gdx.math.Vector;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 
-public class BaseObject implements Location<Vector2> {
+public abstract class BaseObject implements Location<Vector2> {
 	private Texture img;
 	protected Body body;
 	protected TDWorld world;
-	public String getType(){
-		return "Basic";
-	};
+	public abstract String getType();
 	
 	public BaseObject(TDWorld world,Body body, Texture tex){
 		this.world = world;
@@ -35,14 +33,13 @@ public class BaseObject implements Location<Vector2> {
 		batch.draw(img, body.getPosition().x*TDContext.PIX_TO_METER, body.getPosition().y*TDContext.PIX_TO_METER);
 	}
 	
-	public void step() {
-	}
+	public abstract void step();
 //	public abstract void step(TDWorld world);
 	//SolidOBject doesn't have a Texture, so to avoid NullPtrExeption use should filter Objects by ObjectType 
 	@Override
 	public Vector2 getPosition() {
 		// TODO Auto-generated method stub
-		return body.getLinearVelocity();
+		return body.getPosition();
 	}
 	@Override
 	public float getOrientation() {
@@ -67,6 +64,6 @@ public class BaseObject implements Location<Vector2> {
 	@Override
 	public Location<Vector2> newLocation() {
 		// TODO Auto-generated method stub
-		return new BaseObject();
+		return null;
 	}
 }

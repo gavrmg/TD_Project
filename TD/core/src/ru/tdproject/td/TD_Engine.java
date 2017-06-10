@@ -1,6 +1,7 @@
 package ru.tdproject.td;
 
 import java.util.Iterator;
+import java.util.ListIterator;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
@@ -20,7 +21,7 @@ public class TD_Engine implements Runnable {
 	private Texture UnitImg = new Texture("dot.jpg");
 	private Texture TowerImg = new Texture("tower.png");
 	private Texture CastleImg = new Texture("castle.png");
-	private Iterator iter;
+	private ListIterator iter;
 	boolean lag_flag;
 	BaseObject CurrentUnit;
 
@@ -37,7 +38,7 @@ public class TD_Engine implements Runnable {
 		// Texture(Gdx.files.internal("castle.png")),_world));
 		this.CastlePos = new Vector2(20f, 20f);
 		_world.initWorld();
-		_world.createUnit(1, UnitImg, 2, attackType.Melee, 10, 2, 4, 1);
+		_world.createUnit(1, UnitImg, 0.1f, attackType.Melee, 10, 2, 4, 1);
 		lag_flag = false;
 		System.out.println("Engine!");
 	}
@@ -50,7 +51,16 @@ public class TD_Engine implements Runnable {
 				if (!lag_flag)
 					WorkTime = 0;
 				_world.getWorld().step(1 / 100f, 6, 2);
+				iter = _world.getUnits().listIterator();
+				while(iter.hasNext()){
+					CurrentUnit = (BaseObject) iter.next();
+					CurrentUnit.step();
+				}
+				for (BaseObject o : _world.getToAdd())
+					iter.add(o);
+				_world.getToAdd().clear();
 			}
+
 			current = System.currentTimeMillis();
 
 			WorkTime = (current - start);
@@ -60,8 +70,8 @@ public class TD_Engine implements Runnable {
 				try {
 					Thread.sleep(10 - WorkTime - lag);
 					lag = 0;
+					System.out.println(_world.getWorld().getContactCount());
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} catch (IllegalArgumentException e) {
 					System.out.println(WorkTime);

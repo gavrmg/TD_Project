@@ -7,7 +7,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 
-public class Castle extends BaseObject implements Location<Vector2>  {
+public class Castle extends BaseObject   {
 private int health;
 private String Type;
 public Castle(int health,Texture img, String type,Body body,TDWorld world) {

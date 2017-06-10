@@ -59,7 +59,7 @@ public class TDInputHandler implements InputProcessor  {
 			currentPosition.set((float) screenX, (float)screenY, 0);
 			System.out.println(currentPosition.x+" "+(_context.HEIGHT - currentPosition.y));
 			(currentPosition.set(_game.camera.unproject(currentPosition))).scl(1f/TDContext.PIX_TO_METER);
-			world.createTower(5, world.TowerImg, 100, 5, 0, currentPosition.x, currentPosition.y);
+			world.createTower(5, world.TowerImg, 20, 5, 0, currentPosition.x, currentPosition.y);
 		}
 		return true;
 	}

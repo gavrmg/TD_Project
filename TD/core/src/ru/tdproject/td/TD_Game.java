@@ -20,6 +20,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Box2D;
+import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 
@@ -45,6 +46,7 @@ public class TD_Game extends ApplicationAdapter {
 	public static TDContext _context = new TDContext();
 	BaseObject o;
 	public MessageDispatcher TD_Msg;
+	Box2DDebugRenderer debugRenderer;
 //	Matrix4 MeterToTile = new Matrix4(20,0,0,0, 0, 20, 0, 0, 0,0,1,0,0,0,0,1);
 	//float[] MTT = {20,0,0,0,20,0,0,0,1}; // To move to context
 	//Matrix3 MeterToTile;
@@ -53,6 +55,7 @@ public class TD_Game extends ApplicationAdapter {
 	@Override
 	public void create () {
 		Box2D.init();
+		debugRenderer = new Box2DDebugRenderer();
 		Castle = new Vector2(200f,200f);
 		Spawn = new Vector2(200f,600f);
 		map = new TmxMapLoader().load("TestMap.tmx");
@@ -64,9 +67,9 @@ public class TD_Game extends ApplicationAdapter {
 		InputHandler = new TDInputHandler(_world,this, _context);
 		//Eng = new TD_Engine()
 		Thread eng_thr = new Thread(Eng);
-		Thread AIThread = new Thread(AI); 
+		//Thread AIThread = new Thread(AI); 
 		eng_thr.start();
-		AIThread.start();
+		//AIThread.start();
 		ScreenCoords = new Vector3();
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, 800, 800);
@@ -95,7 +98,9 @@ public class TD_Game extends ApplicationAdapter {
 				o.draw(batch);
 			}
 		}
+		
 		batch.end();
+		debugRenderer.render(_world.getWorld(), camera.combined.scl(TDContext.PIX_TO_METER));
 		camera.update();
 	}
 	
