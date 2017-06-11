@@ -1,6 +1,8 @@
 package ru.tdproject.td;
 import java.util.ArrayList;
+import java.util.ListIterator;
 
+import com.badlogic.gdx.ai.msg.MessageDispatcher;
 import com.badlogic.gdx.ai.utils.Location;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.maps.MapLayer;
@@ -21,7 +23,10 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
-import ru.tdproject.td.GameLogic.ProjectileContactFilter;
+
+import ru.tdproject.td.ai.Messages;
+//import ru.tdproject.td.GameLogic.ProjectileContactFilter;
+import ru.tdproject.td.utils.attackType;
 public class TDWorld {
 	private World World;
 	private TiledMap Map;
@@ -35,18 +40,28 @@ public class TDWorld {
 	private Castle castle;
 	private ArrayList<BaseObject> Units;
 	private ArrayList<BaseObject> ToAdd;
+	private MessageDispatcher Messager;
 	public ContactFilter filter;
+	private ListIterator<BaseObject> iter;
+	private BaseObject CurrentObject;
 	public TDWorld(TiledMap map) {
 		super();
-		filter = new ProjectileContactFilter();
+		//filter = new ProjectileContactFilter();
 		World = new com.badlogic.gdx.physics.box2d.World(new Vector2(0,0),true);
-		World.setContactFilter(filter);
+		//World.setContactFilter(filter);
+		Messager = new MessageDispatcher();
 		Map = map;
 		//MaxCoordsPix = new Vector2(map.getProperties().get(key))
 		System.out.println(map.getProperties().getKeys().toString());
 		Units = new ArrayList<BaseObject>();
 		ToAdd = new ArrayList<BaseObject>();
 		castle = createCastle(3, CastleImg, 0, 10, 0, 10f, 10f);
+	}
+	public MessageDispatcher getMessager() {
+		return Messager;
+	}
+	public void setMessager(MessageDispatcher messager) {
+		Messager = messager;
 	}
 	public Castle getCastle() {
 		return castle;
@@ -114,7 +129,8 @@ public class TDWorld {
 		}
 		Unit ThisUnit = new Unit("Unit", img, attackRange,AT, Health,speed,body,this);
 		body.setUserData(ThisUnit);
-			ToAdd.add(ThisUnit);
+		ToAdd.add(ThisUnit);
+		Messager.addListener(ThisUnit, Messages.Attacked.code);
 		shape.dispose();
 	}
 	public ArrayList<BaseObject> getUnits() {
@@ -143,6 +159,7 @@ public class TDWorld {
 		shape.setRadius(0.1f);
 		synchronized (Iter_lock) {
 			Body body = CreateWorldActorBody(x, y, BodyType.DynamicBody, shape);
+			body.getFixtureList().first().setSensor(true);
 			Projectile ThisUnit = new Projectile(body,5f, ProjectileImg, this,Damage,Target);
 			body.setUserData(ThisUnit);
 			ToAdd.add(ThisUnit);
@@ -198,6 +215,17 @@ public class TDWorld {
 			}
 		}
 		shape.dispose();
+	}
+	
+	public void DisposeObjects(){
+		iter = Units.listIterator();
+		while(iter.hasNext()){
+			CurrentObject = iter.next();
+			if (CurrentObject.isToDispose()){
+				World.destroyBody(CurrentObject.body);
+				iter.remove();
+			}
+		}
 	}
 	
 //	public void LogicStep(){

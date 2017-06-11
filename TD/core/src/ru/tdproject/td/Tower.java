@@ -8,6 +8,8 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 
+import ru.tdproject.td.utils.attackType;
+
 public class Tower extends BaseObject {
 	private float AttackRange;
 	private attackType AttackType;
@@ -15,7 +17,7 @@ public class Tower extends BaseObject {
 	private int Health;
 	private Location<Vector2> Target;
 	private long AttackCooldown;
-	//private long AttackCooldown;
+	// private long AttackCooldown;
 
 	public Tower(String Type, Texture img, float attackRange, int health, Body body, TDWorld world) {
 		super(world, body, img);
@@ -53,7 +55,7 @@ public class Tower extends BaseObject {
 
 	@Override
 	public void step() {
-		
+
 		if (Target == null || getPosition().dst(Target.getPosition()) > AttackRange) {
 			Target = null;
 			for (BaseObject o : world.getUnits()) {
@@ -64,17 +66,20 @@ public class Tower extends BaseObject {
 					}
 					if (Target == null)
 						continue;
-					else
-					if (Target.getPosition().dst(getPosition()) < AttackRange && Target != null) {
+					else if (o.getPosition().dst(getPosition()) < AttackRange && Target != null) {
 						Target = o;
+
 					}
 				}
 			}
 		}
-		if (Target != null && System.currentTimeMillis()-AttackCooldown>1000 || (AttackCooldown == 0 && Target != null)) {
+		if (Target != null && System.currentTimeMillis() - AttackCooldown > 1000
+				|| (AttackCooldown == 0 && Target != null)) {
 			AttackCooldown = System.currentTimeMillis();
 			world.createProjectile(1, Target, getPosition().x, getPosition().y);
+			System.out.println(((BaseObject)Target).getType());
 		}
+
 	}
 
 	@Override

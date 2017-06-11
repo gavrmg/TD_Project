@@ -20,14 +20,17 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
 
-import ru.tdproject.td.GameLogic.ActiveGameObject;
+import ru.tdproject.td.ai.Messages;
+import ru.tdproject.td.utils.attackType;
 
+import com.badlogic.gdx.ai.msg.Telegram;
+import com.badlogic.gdx.ai.msg.Telegraph;
 import com.badlogic.gdx.ai.steer.Steerable;
 import com.badlogic.gdx.ai.steer.SteeringAcceleration;
 import com.badlogic.gdx.ai.steer.SteeringBehavior;
 import com.badlogic.gdx.ai.steer.behaviors.Seek;
 import com.badlogic.gdx.ai.utils.Location;
-public class Unit extends BaseObject implements Steerable<Vector2>,ActiveGameObject {
+public class Unit extends BaseObject implements Steerable<Vector2>,Telegraph {
 	private float AttackRange;
 	private attackType AttackType;
 	private int Health;
@@ -47,6 +50,9 @@ public class Unit extends BaseObject implements Steerable<Vector2>,ActiveGameObj
 		seek = new Seek<Vector2>(this, _world.getCastle());
 		//Location choice to be moved to logic
 	}
+	public Unit() {
+		super();
+	}
 	
 	//Logic step
 	
@@ -56,6 +62,8 @@ public class Unit extends BaseObject implements Steerable<Vector2>,ActiveGameObj
 		//System.out.println(SeekOutput.linear);
 		body.setLinearVelocity(SeekOutput.linear);
 		//System.out.println(SeekOutput.linear);
+		if (Health <= 0)
+			setToDispose(true);
 	}
 	
 	//Getters, setters and implemented functions
@@ -181,23 +189,18 @@ public class Unit extends BaseObject implements Steerable<Vector2>,ActiveGameObj
 		// TODO Auto-generated method stub
 		
 	}
-
-	@Override
-	public void Attack(ActiveGameObject Target) {
+	public Location<Vector2> newLocation() {
 		// TODO Auto-generated method stub
-		
+		return new Unit();
 	}
 
 	@Override
-	public void TakeDamage(int Damage) {
+	public boolean handleMessage(Telegram msg) {
 		// TODO Auto-generated method stub
-		
+		if(msg.message == Messages.Attacked.code)
+			Health-=(int) msg.extraInfo;
+		return false;
 	}
 
-	@Override
-	public ActiveGameObject GetThisObject() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
+	
 }

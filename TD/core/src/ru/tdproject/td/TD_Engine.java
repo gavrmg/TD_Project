@@ -11,6 +11,9 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
+
+import ru.tdproject.td.utils.attackType;
+
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 
 public class TD_Engine implements Runnable {
@@ -34,8 +37,6 @@ public class TD_Engine implements Runnable {
 		this._world = _world;
 		this.Name = name;
 		Iter_lock = new Object();
-		// _world.setGoal(new Castle(new Circle(_world.getCastlePos(),2), new
-		// Texture(Gdx.files.internal("castle.png")),_world));
 		this.CastlePos = new Vector2(20f, 20f);
 		_world.initWorld();
 		_world.createUnit(1, UnitImg, 0.1f, attackType.Melee, 10, 2, 4, 1);
@@ -59,6 +60,7 @@ public class TD_Engine implements Runnable {
 				for (BaseObject o : _world.getToAdd())
 					iter.add(o);
 				_world.getToAdd().clear();
+				_world.DisposeObjects();
 			}
 
 			current = System.currentTimeMillis();
@@ -70,7 +72,6 @@ public class TD_Engine implements Runnable {
 				try {
 					Thread.sleep(10 - WorkTime - lag);
 					lag = 0;
-					System.out.println(_world.getWorld().getContactCount());
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				} catch (IllegalArgumentException e) {
@@ -81,6 +82,10 @@ public class TD_Engine implements Runnable {
 				lag_flag = true;
 			}
 		}
+	}
+	
+	public void CheckContacts(){
+		
 	}
 }
 

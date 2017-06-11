@@ -1,4 +1,4 @@
-package ru.tdproject.td;
+package ru.tdproject.td.utils;
 
 public enum attackType {
 	Melee,Ranged,None

@@ -13,6 +13,7 @@ public abstract class BaseObject implements Location<Vector2> {
 	protected Body body;
 	protected TDWorld world;
 	public abstract String getType();
+	private boolean ToDispose = false;
 	
 	public BaseObject(TDWorld world,Body body, Texture tex){
 		this.world = world;
@@ -65,5 +66,11 @@ public abstract class BaseObject implements Location<Vector2> {
 	public Location<Vector2> newLocation() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	public boolean isToDispose() {
+		return ToDispose;
+	}
+	public void setToDispose(boolean toDispose) {
+		ToDispose = toDispose;
 	}
 }

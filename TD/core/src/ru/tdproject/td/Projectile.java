@@ -1,5 +1,7 @@
 package ru.tdproject.td;
 
+import com.badlogic.gdx.ai.msg.Telegram;
+import com.badlogic.gdx.ai.msg.Telegraph;
 import com.badlogic.gdx.ai.steer.Steerable;
 import com.badlogic.gdx.ai.steer.SteeringAcceleration;
 import com.badlogic.gdx.ai.steer.behaviors.Seek;
@@ -10,7 +12,9 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 
-public class Projectile extends BaseObject implements Steerable<Vector2> {
+import ru.tdproject.td.ai.Messages;
+
+public class Projectile extends BaseObject implements Steerable<Vector2>,Telegraph {
 
 	private int Damage;
 	private Location<Vector2> Target;
@@ -38,6 +42,15 @@ public class Projectile extends BaseObject implements Steerable<Vector2> {
 	public void step(){
 		seek.calculateSteering(Steering);
 		body.setLinearVelocity(Steering.linear);
+		//body.getWorld().getContactList().select(predicate)
+		if (body.getFixtureList().first().testPoint(((BaseObject)Target).body.getPosition())){
+			world.getMessager().dispatchMessage((Telegraph)this, (Telegraph)Target, Messages.Attacked.code, Damage);
+			setToDispose(true);
+		}
+		if (((BaseObject)Target).body == null)
+			setToDispose(true);
+			//for ((ContactEdgebody.getC)
+		//if
 	}
 	@Override
 	public float getZeroLinearSpeedThreshold() {
@@ -141,6 +154,11 @@ public class Projectile extends BaseObject implements Steerable<Vector2> {
 	public void setZeroLinearSpeedThreshold(float value) {
 		// TODO Auto-generated method stub
 		
+	}
+	@Override
+	public boolean handleMessage(Telegram msg) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }
