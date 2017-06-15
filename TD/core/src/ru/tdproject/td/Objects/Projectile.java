@@ -1,4 +1,4 @@
-package ru.tdproject.td;
+package ru.tdproject.td.Objects;
 
 import com.badlogic.gdx.ai.msg.Telegram;
 import com.badlogic.gdx.ai.msg.Telegraph;
@@ -13,6 +13,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 
 import ru.tdproject.td.ai.Messages;
+import ru.tdproject.td.game.TDWorld;
 
 public class Projectile extends BaseObject implements Steerable<Vector2>,Telegraph {
 
@@ -41,13 +42,13 @@ public class Projectile extends BaseObject implements Steerable<Vector2>,Telegra
 	@Override
 	public void step(){
 		seek.calculateSteering(Steering);
-		body.setLinearVelocity(Steering.linear);
+		getBody().setLinearVelocity(Steering.linear);
 		//body.getWorld().getContactList().select(predicate)
-		if (body.getFixtureList().first().testPoint(((BaseObject)Target).body.getPosition())){
+		if (getBody().getFixtureList().first().testPoint(((BaseObject)Target).getBody().getPosition())){
 			world.getMessager().dispatchMessage((Telegraph)this, (Telegraph)Target, Messages.Attacked.code, Damage);
 			setToDispose(true);
 		}
-		if (((BaseObject)Target).body == null)
+		if (((BaseObject)Target).isToDispose())
 			setToDispose(true);
 			//for ((ContactEdgebody.getC)
 		//if
@@ -65,17 +66,17 @@ public class Projectile extends BaseObject implements Steerable<Vector2>,Telegra
 	@Override
 	public Vector2 getPosition() {
 		// TODO Auto-generated method stub
-		return body.getPosition();
+		return getBody().getPosition();
 	}
 	@Override
 	public float getOrientation() {
 		// TODO Auto-generated method stub
-		return body.getAngle();
+		return getBody().getAngle();
 	}
 	@Override
 	public void setOrientation(float orientation) {
 		// TODO Auto-generated method stub
-		body.setTransform(body.getPosition(), orientation);
+		getBody().setTransform(getBody().getPosition(), orientation);
 	}
 	@Override
 	public float vectorToAngle(Vector2 vector) {
@@ -126,17 +127,17 @@ public class Projectile extends BaseObject implements Steerable<Vector2>,Telegra
 	@Override
 	public Vector2 getLinearVelocity() {
 		// TODO Auto-generated method stub
-		return body.getLinearVelocity();
+		return getBody().getLinearVelocity();
 	}
 	@Override
 	public float getAngularVelocity() {
 		// TODO Auto-generated method stub
-		return body.getAngularVelocity();
+		return getBody().getAngularVelocity();
 	}
 	@Override
 	public float getBoundingRadius() {
 		// TODO Auto-generated method stub
-		return body.getFixtureList().first().getShape().getRadius();
+		return getBody().getFixtureList().first().getShape().getRadius();
 	}
 	@Override
 	public boolean isTagged() {

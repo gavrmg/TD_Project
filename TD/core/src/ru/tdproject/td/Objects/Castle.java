@@ -1,4 +1,4 @@
-package ru.tdproject.td;
+package ru.tdproject.td.Objects;
 
 import com.badlogic.gdx.ai.utils.Location;
 import com.badlogic.gdx.graphics.Texture;
@@ -6,6 +6,8 @@ import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
+
+import ru.tdproject.td.game.TDWorld;
 
 public class Castle extends BaseObject   {
 private int health;
@@ -36,15 +38,15 @@ public void step() {
 }
 @Override
 public Vector2 getPosition() {
-	return body.getPosition();
+	return getBody().getPosition();
 }
 @Override
 public float getOrientation() {
-	return body.getAngle();
+	return getBody().getAngle();
 }
 @Override
 public void setOrientation(float orientation) {
-	body.setTransform(body.getPosition(), orientation);
+	getBody().setTransform(getBody().getPosition(), orientation);
 }
 @Override
 public float vectorToAngle(Vector2 vector) {

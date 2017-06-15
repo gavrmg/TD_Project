@@ -1,4 +1,4 @@
-package ru.tdproject.td;
+package ru.tdproject.td.game;
 
 import java.util.Iterator;
 import java.util.ListIterator;
@@ -11,7 +11,9 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.ai.GdxAI;
 
+import ru.tdproject.td.Objects.BaseObject;
 import ru.tdproject.td.utils.attackType;
 
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
@@ -27,7 +29,6 @@ public class TD_Engine implements Runnable {
 	private ListIterator iter;
 	boolean lag_flag;
 	BaseObject CurrentUnit;
-
 	long WorkTime = 0;
 	long lag = 0;
 	long start, current;
@@ -39,7 +40,7 @@ public class TD_Engine implements Runnable {
 		Iter_lock = new Object();
 		this.CastlePos = new Vector2(20f, 20f);
 		_world.initWorld();
-		_world.createUnit(1, UnitImg, 0.1f, attackType.Melee, 10, 2, 4, 1);
+		_world.createUnit(0.4f, UnitImg, 0.1f, attackType.Melee, 10, 2, 4, 1);
 		lag_flag = false;
 		System.out.println("Engine!");
 	}
@@ -61,6 +62,8 @@ public class TD_Engine implements Runnable {
 					iter.add(o);
 				_world.getToAdd().clear();
 				_world.DisposeObjects();
+				//_world.getGdxai();
+				GdxAI.getTimepiece().update(0.01f);
 			}
 
 			current = System.currentTimeMillis();
@@ -82,10 +85,6 @@ public class TD_Engine implements Runnable {
 				lag_flag = true;
 			}
 		}
-	}
-	
-	public void CheckContacts(){
-		
 	}
 }
 

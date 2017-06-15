@@ -1,10 +1,12 @@
-package ru.tdproject.td;
+package ru.tdproject.td.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+
+import ru.tdproject.td.TD_Game;
 public class TDInputHandler implements InputProcessor  {
 	private TDWorld world;
 	private TD_Game _game;
@@ -58,7 +60,7 @@ public class TDInputHandler implements InputProcessor  {
 		if (button == Buttons.LEFT){
 			currentPosition.set((float) screenX, (float)screenY, 0);
 			System.out.println(currentPosition.x+" "+(_context.HEIGHT - currentPosition.y));
-			(currentPosition.set(_game.camera.unproject(currentPosition))).scl(1f/TDContext.PIX_TO_METER);
+			(currentPosition.set(_game.getCamera().unproject(currentPosition))).scl(1f/TDContext.PIX_TO_METER);
 			world.createTower(5, world.TowerImg, 20, 5, 0, currentPosition.x, currentPosition.y);
 		}
 		return true;

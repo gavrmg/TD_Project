@@ -1,4 +1,4 @@
-package ru.tdproject.td;
+package ru.tdproject.td.game;
 
 import com.badlogic.gdx.math.Matrix3;
 

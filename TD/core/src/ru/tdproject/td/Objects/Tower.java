@@ -1,4 +1,4 @@
-package ru.tdproject.td;
+package ru.tdproject.td.Objects;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ai.utils.Location;
@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 
+import ru.tdproject.td.game.TDWorld;
 import ru.tdproject.td.utils.attackType;
 
 public class Tower extends BaseObject {
@@ -78,6 +79,10 @@ public class Tower extends BaseObject {
 			AttackCooldown = System.currentTimeMillis();
 			world.createProjectile(1, Target, getPosition().x, getPosition().y);
 			System.out.println(((BaseObject)Target).getType());
+			if(((BaseObject)Target).isToDispose()){
+				Target = null;
+			}
+			
 		}
 
 	}

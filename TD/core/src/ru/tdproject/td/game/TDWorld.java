@@ -1,9 +1,12 @@
-package ru.tdproject.td;
+package ru.tdproject.td.game;
 import java.util.ArrayList;
 import java.util.ListIterator;
 
+import com.badlogic.gdx.ai.GdxAI;
+import com.badlogic.gdx.ai.btree.BehaviorTree;
 import com.badlogic.gdx.ai.msg.MessageDispatcher;
 import com.badlogic.gdx.ai.utils.Location;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapLayers;
@@ -24,6 +27,11 @@ import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 
+import ru.tdproject.td.Objects.BaseObject;
+import ru.tdproject.td.Objects.Castle;
+import ru.tdproject.td.Objects.Projectile;
+import ru.tdproject.td.Objects.Tower;
+import ru.tdproject.td.Objects.Unit;
 import ru.tdproject.td.ai.Messages;
 //import ru.tdproject.td.GameLogic.ProjectileContactFilter;
 import ru.tdproject.td.utils.attackType;
@@ -44,18 +52,17 @@ public class TDWorld {
 	public ContactFilter filter;
 	private ListIterator<BaseObject> iter;
 	private BaseObject CurrentObject;
+	private GdxAI gdxai;
+
 	public TDWorld(TiledMap map) {
 		super();
-		//filter = new ProjectileContactFilter();
 		World = new com.badlogic.gdx.physics.box2d.World(new Vector2(0,0),true);
-		//World.setContactFilter(filter);
 		Messager = new MessageDispatcher();
 		Map = map;
-		//MaxCoordsPix = new Vector2(map.getProperties().get(key))
 		System.out.println(map.getProperties().getKeys().toString());
 		Units = new ArrayList<BaseObject>();
 		ToAdd = new ArrayList<BaseObject>();
-		castle = createCastle(3, CastleImg, 0, 10, 0, 10f, 10f);
+		castle = createCastle(3, CastleImg, 0, 10, 0, 40f, 20f);
 	}
 	public MessageDispatcher getMessager() {
 		return Messager;
@@ -183,16 +190,6 @@ public class TDWorld {
 			return ThisUnit;
 		}
 	}
-//	public void createSolidObject(RectangleMapObject object){
-//		PolygonShape shape = new PolygonShape();
-//		shape.setAsBox(object.getRectangle().);
-//		SolidObject  ThisUnit = new SolidObject();
-//		synchronized (Iter_lock) {
-//			Body body = CreateWorldActorBody(1, object.getPolygon().getX(), object.getPolygon().getY(), BodyType.StaticBody, shape);
-//			body.setUserData(ThisUnit);
-//		}
-//		shape.dispose();
-//	}
 	public void initWorld(){
 		Body body = CreateBody(0,0,BodyType.StaticBody);
 		PolygonShape shape = new PolygonShape(); 
@@ -208,7 +205,7 @@ public class TDWorld {
 						obj = ((RectangleMapObject) Obj).getRectangle();
 						shape.setAsBox(obj.getHeight() / (2*TDContext.PIX_TO_METER), obj.getWidth() / (2*TDContext.PIX_TO_METER),
 								obj.getCenter(Center).scl(1f/TDContext.PIX_TO_METER)/*.add(0, -_context.MAP_SIZE)*/,
-								0);//Magic constant representing 1 tile per meter. To be moved into TDContext
+								0);
 						body.createFixture(shape, 0f);
 					}
 				}
@@ -222,12 +219,19 @@ public class TDWorld {
 		while(iter.hasNext()){
 			CurrentObject = iter.next();
 			if (CurrentObject.isToDispose()){
-				World.destroyBody(CurrentObject.body);
+				World.destroyBody(CurrentObject.getBody());
 				iter.remove();
 			}
 		}
 	}
+	public GdxAI getGdxai() {
+		return gdxai;
+	}
+	public void setGdxai(GdxAI gdxai) {
+		this.gdxai = gdxai;
+	}
 	
+
 //	public void LogicStep(){
 //		World.
 //	}
