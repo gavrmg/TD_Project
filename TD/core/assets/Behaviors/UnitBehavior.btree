@@ -1,0 +1,9 @@
+import HPCheck:"ru.tdproject.td.ai.UnitLogic.HealthMoreThenZeroCondition"
+import GetDestroyed:"ru.tdproject.td.ai.UnitLogic.GetDestroyedTask"
+import MoveToTarget:"ru.tdproject.td.ai.UnitLogic.MoveToTargetTask"
+import isNearTarget:"ru.tdproject.td.ai.UnitLogic.NearTargetCondition"
+
+root
+  dynamicGuardSelector
+    (HPCheck) MoveToTarget
+    ()        GetDestroyed                       # fallback behavior (no guard)
