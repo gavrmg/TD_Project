@@ -225,7 +225,7 @@ public class Unit extends BaseObject implements Steerable<Vector2>,Telegraph {
 	public boolean handleMessage(Telegram msg) {
 		// TODO Auto-generated method stub
 		if(msg.message == Messages.Attacked.code)
-			Health-=(int) msg.extraInfo;
+			Health-= (Integer) msg.extraInfo;
 		return false;
 	}
 	public BaseObject getTarget() {
