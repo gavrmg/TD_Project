@@ -49,7 +49,7 @@ public class TD_Game extends ApplicationAdapter {
 	BaseObject o;
 	public MessageDispatcher TD_Msg;
 	Box2DDebugRenderer debugRenderer;
-	Iterator iter;
+	Iterator<BaseObject> iter;
 	Vector3 ScreenCoords;
 	@Override
 	public void create () {
@@ -69,7 +69,6 @@ public class TD_Game extends ApplicationAdapter {
 		getCamera().setToOrtho(false, 800, 800);
 		getCamera().zoom = 1;
 		MapRender = new OrthogonalTiledMapRenderer(_world.getMap());
-		Iterator iter;
 	}
 
 	@Override
